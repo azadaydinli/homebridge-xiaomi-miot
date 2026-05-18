@@ -30,6 +30,12 @@
   "addDevice": "Cihaz Ekle",
   "remove": "Kaldır",
   "optional": "isteğe bağlı",
+  "discoverBtn": "Cihazları Keşfet",
+  "discoverHint": "MiCloud hesabınıza bağlı tüm Xiaomi cihazlarını otomatik olarak keşfedin.",
+  "discovering": "Keşfediliyor…",
+  "discoverSuccess": "{n} cihaz bulundu. {added} yeni eklendi.",
+  "discoverEmpty": "MiCloud hesabınızda yerel IP ve token'ı olan cihaz bulunamadı.",
+  "discoverError": "Keşif başarısız",
   "countryNames": {
     "cn": "Çin",
     "de": "Almanya",

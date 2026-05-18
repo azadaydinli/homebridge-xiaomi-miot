@@ -11,7 +11,7 @@ const Events       = require(MIOT_ROOT + 'lib/constants/Events.js');
 
 const PLUGIN_NAME = 'homebridge-xiaomi-miot';
 const PLATFORM_NAME = 'XiaomiMiot';
-const PLUGIN_VERSION = '1.0.0';
+const PLUGIN_VERSION = '1.1.0';
 
 let Homebridge;
 

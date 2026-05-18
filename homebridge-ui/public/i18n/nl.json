@@ -30,6 +30,12 @@
   "addDevice": "Apparaat toevoegen",
   "remove": "Verwijderen",
   "optional": "optioneel",
+  "discoverBtn": "Apparaten ontdekken",
+  "discoverHint": "Ontdek automatisch alle Xiaomi-apparaten die aan uw MiCloud-account zijn gekoppeld.",
+  "discovering": "Ontdekken…",
+  "discoverSuccess": "{n} apparaat/apparaten gevonden. {added} nieuwe toegevoegd.",
+  "discoverEmpty": "Geen apparaten met lokaal IP en token gevonden in uw MiCloud-account.",
+  "discoverError": "Ontdekking mislukt",
   "countryNames": {
     "cn": "China",
     "de": "Duitsland",

@@ -30,6 +30,12 @@
   "addDevice": "デバイスを追加",
   "remove": "削除",
   "optional": "任意",
+  "discoverBtn": "デバイスを検出",
+  "discoverHint": "MiCloudアカウントに登録されているすべての Xiaomi デバイスを自動検出します。",
+  "discovering": "検出中…",
+  "discoverSuccess": "{n} 台のデバイスが見つかりました。{added} 台を新たに追加しました。",
+  "discoverEmpty": "MiCloud アカウントにローカル IP とトークンを持つデバイスが見つかりませんでした。",
+  "discoverError": "検出に失敗しました",
   "countryNames": {
     "cn": "中国",
     "de": "ドイツ",

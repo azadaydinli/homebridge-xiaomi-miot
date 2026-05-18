@@ -30,6 +30,12 @@
   "addDevice": "إضافة جهاز",
   "remove": "إزالة",
   "optional": "اختياري",
+  "discoverBtn": "اكتشاف الأجهزة",
+  "discoverHint": "اكتشاف تلقائي لجميع أجهزة Xiaomi المرتبطة بحساب MiCloud الخاص بك.",
+  "discovering": "جاري الاكتشاف…",
+  "discoverSuccess": "تم العثور على {n} جهاز. أضيف {added} جهاز جديد.",
+  "discoverEmpty": "لم يتم العثور على أجهزة تحتوي على IP محلي ورمز مميز في حساب MiCloud.",
+  "discoverError": "فشل الاكتشاف",
   "countryNames": {
     "cn": "الصين",
     "de": "ألمانيا",

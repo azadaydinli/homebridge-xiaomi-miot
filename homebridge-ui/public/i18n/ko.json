@@ -30,6 +30,12 @@
   "addDevice": "기기 추가",
   "remove": "제거",
   "optional": "선택 사항",
+  "discoverBtn": "기기 검색",
+  "discoverHint": "MiCloud 계정에 연결된 모든 Xiaomi 기기를 자동으로 검색합니다.",
+  "discovering": "검색 중…",
+  "discoverSuccess": "{n}개의 기기를 발견했습니다. {added}개 새로 추가되었습니다.",
+  "discoverEmpty": "MiCloud 계정에서 로컬 IP와 토큰이 있는 기기를 찾을 수 없습니다.",
+  "discoverError": "검색 실패",
   "countryNames": {
     "cn": "중국",
     "de": "독일",

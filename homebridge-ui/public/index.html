@@ -177,6 +177,18 @@
 
   /* ── Actions row ── */
   .actions { margin-top: 18px; display: flex; gap: 10px; }
+
+  /* ── Discover button + result ── */
+  .discover-row { margin-top: 14px; display: flex; flex-direction: column; gap: 8px; }
+  .discover-msg {
+    font-size: 12px; padding: 8px 12px; border-radius: 6px;
+    display: none;
+  }
+  .discover-msg.ok   { background: rgba(22,163,74,0.10); color: #16a34a; border: 1px solid rgba(22,163,74,0.28); }
+  .discover-msg.err  { background: rgba(220,38,38,0.08); color: var(--danger); border: 1px solid rgba(220,38,38,0.22); }
+  .discover-msg.info { background: var(--cloud-light); color: var(--cloud); border: 1px solid var(--cloud-border); }
+  .btn-cloud  { background: var(--cloud); color: #fff; }
+  .btn-cloud:hover { opacity: .85; }
 </style>
 
 <div id="app"></div>
@@ -211,7 +223,7 @@
 
   const expanded        = new Set();
   const advExpanded     = new Set();
-  let   globalExpanded  = false;
+  let   globalExpanded  = true;
   const app = document.getElementById('app');
 
   /* ── Helpers ── */
@@ -271,6 +283,12 @@
             </div>
           </div>
           <div class="hint" style="margin-top:6px">${t.forceMiCloudHint || 'Use MiCloud even for devices that support local connection.'}</div>
+
+          <div class="discover-row">
+            <button class="btn btn-cloud" id="btn-discover">&#128270; ${t.discoverBtn || 'Discover Devices'}</button>
+            <div class="hint">${t.discoverHint || 'Auto-discover all Xiaomi devices linked to your MiCloud account.'}</div>
+            <div class="discover-msg" id="discover-msg"></div>
+          </div>
         </div>
       </div>
 
@@ -444,6 +462,69 @@
         config.micloud.forceMiCloud = gForce.checked;
         gForce.closest('.toggle-item').classList.toggle('checked', gForce.checked);
         save();
+      });
+    }
+
+    /* Discover devices */
+    const discoverBtn = document.getElementById('btn-discover');
+    const discoverMsg = document.getElementById('discover-msg');
+    if (discoverBtn && discoverMsg) {
+      discoverBtn.addEventListener('click', async () => {
+        const username = gUsername ? gUsername.value.trim() : (config.micloud.username || '');
+        const password = gPassword ? gPassword.value.trim() : (config.micloud.password || '');
+        const country  = gCountry  ? gCountry.value  : (config.micloud.country  || 'cn');
+        if (!username || !password) {
+          discoverMsg.className = 'discover-msg err';
+          discoverMsg.style.display = '';
+          discoverMsg.textContent = '⚠️ ' + (t.username || 'Username') + ' & ' + (t.password || 'Password') + ' required.';
+          return;
+        }
+        discoverBtn.disabled = true;
+        discoverBtn.textContent = '⏳ ' + (t.discovering || 'Discovering…');
+        discoverMsg.className = 'discover-msg info';
+        discoverMsg.style.display = '';
+        discoverMsg.textContent = t.discovering || 'Discovering…';
+        try {
+          const res = await homebridge.request('/discover', { username, password, country });
+          const found = (res && res.devices) ? res.devices : [];
+          if (found.length === 0) {
+            discoverMsg.className = 'discover-msg err';
+            discoverMsg.textContent = '🔍 ' + (t.discoverEmpty || 'No devices found.');
+          } else {
+            const existingIps = new Set(config.devices.map(d => d.ip).filter(Boolean));
+            let added = 0;
+            for (const d of found) {
+              if (d.localip && existingIps.has(d.localip)) continue;
+              config.devices.push({
+                name:            d.name || d.model || 'Xiaomi Device',
+                ip:              d.localip || '',
+                token:           d.token  || '',
+                model:           d.model  || '',
+                deviceId:        d.did    || '',
+                pollingInterval: 10000,
+                deviceEnabled:   true,
+                customAccessory: false,
+                silentLog:       false,
+                deepDebugLog:    false,
+                _micloudOverride: false,
+                micloud:         {},
+              });
+              if (d.localip) existingIps.add(d.localip);
+              added++;
+            }
+            const msg = (t.discoverSuccess || 'Found {n} device(s). {added} new added.')
+              .replace('{n}', found.length).replace('{added}', added);
+            discoverMsg.className = 'discover-msg ok';
+            discoverMsg.textContent = '✅ ' + msg;
+            if (added > 0) { render(); save(); }
+          }
+        } catch (err) {
+          discoverMsg.className = 'discover-msg err';
+          discoverMsg.textContent = '❌ ' + (t.discoverError || 'Discovery failed') + ': ' + (err.message || err);
+        } finally {
+          discoverBtn.disabled = false;
+          discoverBtn.innerHTML = '&#128270; ' + (t.discoverBtn || 'Discover Devices');
+        }
       });
     }
 

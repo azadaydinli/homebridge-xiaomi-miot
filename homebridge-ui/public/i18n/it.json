@@ -30,6 +30,12 @@
   "addDevice": "Aggiungi dispositivo",
   "remove": "Rimuovi",
   "optional": "opzionale",
+  "discoverBtn": "Scopri dispositivi",
+  "discoverHint": "Scopri automaticamente tutti i dispositivi Xiaomi collegati al tuo account MiCloud.",
+  "discovering": "Scoperta in corso…",
+  "discoverSuccess": "Trovati {n} dispositivo/i. Aggiunti {added} nuovi.",
+  "discoverEmpty": "Nessun dispositivo con IP locale e token trovato nel tuo account MiCloud.",
+  "discoverError": "Scoperta fallita",
   "countryNames": {
     "cn": "Cina",
     "de": "Germania",

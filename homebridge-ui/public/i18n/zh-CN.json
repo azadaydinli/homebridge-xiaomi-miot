@@ -30,6 +30,12 @@
   "addDevice": "添加设备",
   "remove": "移除",
   "optional": "可选",
+  "discoverBtn": "发现设备",
+  "discoverHint": "自动发现与您 MiCloud 账号关联的所有小米设备。",
+  "discovering": "发现中…",
+  "discoverSuccess": "找到 {n} 个设备，新增 {added} 个。",
+  "discoverEmpty": "您的 MiCloud 账号中未找到具有本地 IP 和令牌的设备。",
+  "discoverError": "发现失败",
   "countryNames": {
     "cn": "中国",
     "de": "德国",
