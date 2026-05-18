@@ -1,0 +1,56 @@
+{
+  "name": "homebridge-xiaomi-miot",
+  "displayName": "Homebridge Xiaomi MiOT",
+  "version": "1.0.0",
+  "description": "Homebridge plugin for Xiaomi devices using the MiOT protocol — local and MiCloud",
+  "main": "index.js",
+  "scripts": {},
+  "keywords": [
+    "homebridge-plugin",
+    "homebridge",
+    "xiaomi",
+    "miot",
+    "micloud",
+    "mi",
+    "fan",
+    "air-purifier",
+    "humidifier",
+    "vacuum",
+    "robot",
+    "light",
+    "smartmi",
+    "dmaker",
+    "roborock",
+    "dreame",
+    "yeelink"
+  ],
+  "author": "azadaydinli",
+  "license": "MIT",
+  "funding": [
+    {
+      "type": "ko_fi",
+      "url": "https://ko-fi.com/azadaydinli"
+    },
+    {
+      "type": "github",
+      "url": "https://github.com/sponsors/azadaydinli"
+    }
+  ],
+  "bugs": {
+    "url": "https://github.com/azadaydinli/homebridge-xiaomi-miot/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/azadaydinli/homebridge-xiaomi-miot.git"
+  },
+  "engines": {
+    "homebridge": ">=1.6.0 || >=2.0.0",
+    "node": ">=18.0.0"
+  },
+  "homepage": "https://github.com/azadaydinli/homebridge-xiaomi-miot",
+  "dependencies": {
+    "node-fetch": "^2.6.7",
+    "randomstring": "^1.2.1",
+    "color-convert": "^2.0.1"
+  }
+}

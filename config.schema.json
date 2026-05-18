@@ -1,0 +1,68 @@
+{
+  "pluginAlias": "XiaomiMiot",
+  "pluginType": "platform",
+  "singular": true,
+  "customUi": true,
+  "headerDisplay": "Xiaomi MiOT device control via local network or MiCloud.",
+  "schema": {
+    "type": "object",
+    "properties": {
+      "name": {
+        "title": "Platform Name",
+        "type": "string",
+        "default": "Xiaomi MiOT"
+      },
+      "micloud": {
+        "title": "Global MiCloud",
+        "type": "object",
+        "properties": {
+          "username": { "title": "Username", "type": "string" },
+          "password": { "title": "Password", "type": "string" },
+          "country": {
+            "title": "Country",
+            "type": "string",
+            "default": "de",
+            "enum": ["cn","de","sg","tw","us","ru","in","i2"]
+          },
+          "forceMiCloud": {
+            "title": "Force MiCloud",
+            "type": "boolean",
+            "default": false
+          }
+        }
+      },
+      "devices": {
+        "title": "Devices",
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": ["name","ip","token"],
+          "properties": {
+            "name":            { "title": "Device Name",        "type": "string" },
+            "ip":              { "title": "IP Address",         "type": "string" },
+            "token":           { "title": "Token",              "type": "string" },
+            "model":           { "title": "Model (optional)",   "type": "string" },
+            "deviceId":        { "title": "Device ID (optional)","type": "string" },
+            "pollingInterval": { "title": "Polling Interval (ms)","type": "number","default": 10000 },
+            "deviceEnabled":   { "title": "Device Enabled",    "type": "boolean","default": true },
+            "customAccessory": { "title": "Custom Accessory",   "type": "boolean","default": false },
+            "silentLog":       { "title": "Silent Log",         "type": "boolean","default": false },
+            "deepDebugLog":    { "title": "Deep Debug Log",     "type": "boolean","default": false },
+            "micloud": {
+              "title": "Device MiCloud (override global)",
+              "type": "object",
+              "properties": {
+                "username": { "title": "Username", "type": "string" },
+                "password": { "title": "Password", "type": "string" },
+                "country":  {
+                  "title": "Country", "type": "string",
+                  "enum": ["cn","de","sg","tw","us","ru","in","i2"]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
