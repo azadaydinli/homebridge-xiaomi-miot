@@ -1,0 +1,168 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 360">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f1e2e"/>
+      <stop offset="100%" stop-color="#0a1628"/>
+    </linearGradient>
+    <linearGradient id="panelGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="rgba(255,255,255,0.05)"/>
+      <stop offset="100%" stop-color="rgba(255,255,255,0.02)"/>
+    </linearGradient>
+    <pattern id="dots" x="0" y="0" width="32" height="32" patternUnits="userSpaceOnUse">
+      <circle cx="16" cy="16" r="1" fill="rgba(255,255,255,0.04)"/>
+    </pattern>
+    <filter id="gC" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="11" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="softGlow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="6" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="360" rx="24" fill="url(#bg)"/>
+  <rect width="1200" height="360" rx="24" fill="url(#dots)"/>
+
+  <!-- Atmospheric rings -->
+  <circle cx="918" cy="180" r="310" fill="none" stroke="rgba(0,180,216,0.03)" stroke-width="1.5"/>
+  <circle cx="918" cy="180" r="210" fill="none" stroke="rgba(0,180,216,0.04)" stroke-width="1"/>
+
+  <!-- ═══════════════ LEFT: Typography ═══════════════ -->
+
+  <!-- Homebridge badge pill -->
+  <rect x="60" y="62" width="210" height="30" rx="15"
+    fill="rgba(73,31,89,0.55)" stroke="rgba(200,130,255,0.35)" stroke-width="1"/>
+  <circle cx="82" cy="77" r="5" fill="#c084e8"/>
+  <text x="152" y="82"
+    font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif"
+    font-size="13" fill="#c084e8" text-anchor="middle" font-weight="600" letter-spacing="0.4">
+    homebridge plugin
+  </text>
+
+  <!-- Plugin name -->
+  <text x="60" y="172"
+    font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif"
+    font-size="64" fill="white" font-weight="800" letter-spacing="-1.5">Xiaomi</text>
+  <text x="60" y="245"
+    font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif"
+    font-size="64" fill="#00b4d8" font-weight="800" letter-spacing="-1.5">MiOT</text>
+
+  <!-- Subtitle -->
+  <text x="60" y="283"
+    font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif"
+    font-size="18" fill="rgba(255,255,255,0.45)">
+    Universal Xiaomi device control for HomeKit
+  </text>
+
+  <!-- Feature pills -->
+  <rect x="60" y="305" width="118" height="26" rx="13"
+    fill="rgba(255,255,255,0.07)" stroke="rgba(255,255,255,0.11)" stroke-width="1"/>
+  <text x="119" y="322"
+    font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif"
+    font-size="12" fill="rgba(255,255,255,0.65)" text-anchor="middle">Local + Cloud</text>
+
+  <rect x="188" y="305" width="100" height="26" rx="13"
+    fill="rgba(255,255,255,0.07)" stroke="rgba(255,255,255,0.11)" stroke-width="1"/>
+  <text x="238" y="322"
+    font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif"
+    font-size="12" fill="rgba(255,255,255,0.65)" text-anchor="middle">83+ Models</text>
+
+  <rect x="298" y="305" width="130" height="26" rx="13"
+    fill="rgba(255,255,255,0.07)" stroke="rgba(255,255,255,0.11)" stroke-width="1"/>
+  <text x="363" y="322"
+    font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif"
+    font-size="12" fill="rgba(255,255,255,0.65)" text-anchor="middle">Homebridge v2</text>
+
+  <!-- ═══════════════ RIGHT: Device panel ═══════════════ -->
+
+  <!-- Glass panel -->
+  <rect x="690" y="38" width="456" height="284" rx="20"
+    fill="url(#panelGrad)" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
+
+  <!-- ── Fan speed ring — r=110, circ=691
+       270° track = 518 | 90° gap = 173
+       50% speed = 259 units active      ── -->
+
+  <!-- Track (dim) -->
+  <circle cx="918" cy="180" r="110"
+    fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="14"
+    stroke-linecap="round" stroke-dasharray="518 173"
+    transform="rotate(135, 918, 180)"/>
+
+  <!-- Active arc glow -->
+  <g filter="url(#gC)">
+    <circle cx="918" cy="180" r="110"
+      fill="none" stroke="#00b4d8" stroke-width="10" stroke-linecap="round"
+      stroke-dasharray="259 432" opacity="0.55"
+      transform="rotate(135, 918, 180)"/>
+  </g>
+
+  <!-- Active arc (solid) -->
+  <circle cx="918" cy="180" r="110"
+    fill="none" stroke="#00b4d8" stroke-width="14" stroke-linecap="round"
+    stroke-dasharray="259 432"
+    transform="rotate(135, 918, 180)"/>
+
+  <!-- Inner circle (frosted glass) -->
+  <circle cx="918" cy="180" r="88"
+    fill="rgba(10,22,40,0.60)" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+
+  <!-- ── Fan blade icon (centre) ── -->
+  <g filter="url(#softGlow)" opacity="0.85">
+    <!-- Blade 1 → up -->
+    <ellipse cx="918" cy="163" rx="7" ry="15"
+      fill="rgba(0,180,216,0.55)" transform="rotate(0, 918, 180)"/>
+    <!-- Blade 2 → bottom-right -->
+    <ellipse cx="918" cy="163" rx="7" ry="15"
+      fill="rgba(0,180,216,0.55)" transform="rotate(120, 918, 180)"/>
+    <!-- Blade 3 → bottom-left -->
+    <ellipse cx="918" cy="163" rx="7" ry="15"
+      fill="rgba(0,180,216,0.55)" transform="rotate(240, 918, 180)"/>
+  </g>
+  <!-- Hub -->
+  <circle cx="918" cy="180" r="7" fill="#00b4d8" opacity="0.9"/>
+  <circle cx="918" cy="180" r="3.5" fill="rgba(10,22,40,0.95)"/>
+
+  <!-- Mode label -->
+  <text x="918" y="225"
+    font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif"
+    font-size="11" fill="#00b4d8" text-anchor="middle" font-weight="700" letter-spacing="3">AUTO</text>
+
+  <!-- Protocol label -->
+  <text x="918" y="244"
+    font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif"
+    font-size="10" fill="rgba(255,255,255,0.22)" text-anchor="middle">MiOT Protocol</text>
+
+  <!-- Speed label -->
+  <text x="918" y="288"
+    font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif"
+    font-size="9" fill="rgba(255,255,255,0.22)" text-anchor="middle" letter-spacing="2.5">FAN SPEED</text>
+
+  <!-- Speed dots — 5 dots centred at x=918, 22 px apart → start x=874 -->
+  <circle cx="874" cy="305" r="5" fill="#00b4d8"/>
+  <circle cx="896" cy="305" r="5" fill="#00b4d8" opacity="0.60"/>
+  <circle cx="918" cy="305" r="5" fill="#00b4d8" opacity="0.30"/>
+  <circle cx="940" cy="305" r="5" fill="rgba(255,255,255,0.10)"/>
+  <circle cx="962" cy="305" r="5" fill="rgba(255,255,255,0.10)"/>
+
+  <!-- ── Small fan icon (upper-left of panel) ── -->
+  <g transform="translate(730, 85)">
+    <ellipse cx="0" cy="-14" rx="5" ry="11"
+      fill="rgba(0,180,216,0.40)" transform="rotate(0)"/>
+    <ellipse cx="0" cy="-14" rx="5" ry="11"
+      fill="rgba(0,180,216,0.40)" transform="rotate(120)"/>
+    <ellipse cx="0" cy="-14" rx="5" ry="11"
+      fill="rgba(0,180,216,0.40)" transform="rotate(240)"/>
+    <circle cx="0" cy="0" r="4" fill="rgba(0,180,216,0.60)"/>
+    <circle cx="0" cy="0" r="2" fill="rgba(10,22,40,0.90)"/>
+  </g>
+
+  <!-- ── Floating air particles (right of panel) ── -->
+  <circle cx="1090" cy="138" r="3.5" fill="rgba(0,180,216,0.22)"/>
+  <circle cx="1112" cy="158" r="2.5" fill="rgba(0,180,216,0.15)"/>
+  <circle cx="1100" cy="180" r="3"   fill="rgba(0,180,216,0.10)"/>
+  <circle cx="1118" cy="200" r="2"   fill="rgba(0,180,216,0.08)"/>
+  <circle cx="1095" cy="220" r="2.5" fill="rgba(0,180,216,0.06)"/>
+</svg>
