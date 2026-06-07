@@ -174,10 +174,137 @@ class XiaomiMiotDeviceController {
 
       if (this.deviceEnabled) {
         this.miotDevice.startPropertyPolling();
+        this._startOfflineDetection();
+        this._patchAutoModeRotationSpeed();
       } else {
         this.logger.warn('Device disabled — polling not started');
       }
     }
+  }
+
+  _startOfflineDetection() {
+    const { HapStatusError, HAPStatus } = this.api.hap;
+
+    let online      = false;
+    let lastUpdate  = Date.now();
+    const threshold = this.pollingInterval * 4;  // 4 missed polls → offline
+
+    /* ── Iterate every HAP characteristic across all accessories ── */
+    const eachChar = (fn) => {
+      const accessories = this.device ? this.device.getAccessories() : [];
+      accessories.forEach(acc => {
+        acc.services.forEach(svc => {
+          svc.characteristics.forEach(char => fn(char));
+        });
+      });
+    };
+
+    /* ── Install error-throwing getHandler on every characteristic ── */
+    const pushOffline = () => {
+      this.miotDevice.localConnected = false;
+      eachChar(char => {
+        /* Save original handler (once only) and replace with error thrower */
+        if (!Object.prototype.hasOwnProperty.call(char, '_xiaomiOrigGet')) {
+          char._xiaomiOrigGet = char.getHandler !== undefined ? char.getHandler : null;
+          char.onGet(() => {
+            throw new HapStatusError(HAPStatus.SERVICE_COMMUNICATION_FAILURE);
+          });
+        }
+      });
+      this.logger.warn(`[OfflineDetect] ${this.name} — offline, error getHandlers installed.`);
+    };
+
+    /* ── Restore original getHandlers when device comes back ── */
+    const pushOnline = () => {
+      this.miotDevice.localConnected = true;
+      eachChar(char => {
+        if (Object.prototype.hasOwnProperty.call(char, '_xiaomiOrigGet')) {
+          if (char._xiaomiOrigGet) {
+            char.onGet(char._xiaomiOrigGet);
+          } else {
+            char.removeOnGet();
+          }
+          delete char._xiaomiOrigGet;
+        }
+      });
+      this.logger.info(`[OfflineDetect] ${this.name} — back online, original handlers restored.`);
+    };
+
+    /* ── Track online state ── */
+    this.miotDevice.on(Events.MIOT_DEVICE_ALL_PROPERTIES_UPDATED, () => {
+      const wasOffline = !online;
+      lastUpdate = Date.now();
+      online = true;
+      clearTimeout(this._offlineStartupTimeout);
+      if (wasOffline) {
+        pushOnline();
+        this.logger.info(`[OfflineDetect] ${this.name} — online.`);
+      }
+    });
+
+    /* Case 1: never connected within startup window */
+    this._offlineStartupTimeout = setTimeout(() => {
+      if (!online) {
+        this.logger.warn(`[OfflineDetect] ${this.name} — no connection within startup window.`);
+        pushOffline();
+      }
+    }, threshold);
+
+    /* Case 2: was online but stopped updating */
+    this._offlineDetectionTimer = setInterval(() => {
+      if (!online) return;
+      const elapsed = Date.now() - lastUpdate;
+      if (elapsed > threshold) {
+        online = false;
+        pushOffline();
+      }
+    }, this.pollingInterval);
+  }
+
+  /* ── Auto mode rotation speed patch ── */
+
+  _patchAutoModeRotationSpeed() {
+    const autoSpeed = this.config.autoRotationSpeed ?? 50;
+    if (!autoSpeed) return; // 0 = disabled
+
+    const RS_UUID = this.api.hap.Characteristic.RotationSpeed.UUID;
+    const dev     = this.device;
+    if (!dev) return;
+
+    /* Find the RotationSpeed characteristic */
+    let rsChar = null;
+    outer: for (const acc of dev.getAccessories()) {
+      for (const svc of acc.services) {
+        for (const char of svc.characteristics) {
+          if (char.UUID === RS_UUID) { rsChar = char; break outer; }
+        }
+      }
+    }
+
+    if (!rsChar || !rsChar.getHandler) return;
+
+    /* 1) Override getHandler — for HomeKit GET requests */
+    const origHandler = rsChar.getHandler;
+    rsChar.onGet(async (...args) => {
+      const val = await origHandler(...args);
+      if (val === 0 && this._isInAutoOrSleepMode(dev)) return autoSpeed;
+      return val;
+    });
+
+    /* 2) Fix push updates — homebridge-miot calls updateValue(0) after each poll.
+          Our listener runs after it (registered later) and corrects the value. */
+    this.miotDevice.on(Events.MIOT_DEVICE_ALL_PROPERTIES_UPDATED, () => {
+      if (rsChar && this._isInAutoOrSleepMode(dev)) {
+        rsChar.updateValue(autoSpeed);
+      }
+    });
+
+    this.logger.debug(`[AutoSpeed] RotationSpeed patched: ${autoSpeed}% shown in auto/sleep mode`);
+  }
+
+  _isInAutoOrSleepMode(dev) {
+    return (typeof dev.isAutoModeEnabled  === 'function' && dev.isAutoModeEnabled())
+        || (typeof dev.isSleepModeEnabled === 'function' && dev.isSleepModeEnabled());
   }
 
   /* ── Persistence helpers ── */

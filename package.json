@@ -1,7 +1,7 @@
 {
   "name": "homebridge-xiaomi-miot",
   "displayName": "Homebridge Xiaomi MiOT",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Homebridge plugin for Xiaomi devices using the MiOT protocol — local and MiCloud",
   "main": "index.js",
   "scripts": {},
@@ -49,8 +49,8 @@
   },
   "homepage": "https://github.com/azadaydinli/homebridge-xiaomi-miot",
   "dependencies": {
-    "node-fetch": "^2.6.7",
-    "randomstring": "^1.2.1",
-    "color-convert": "^2.0.1"
+    "@homebridge/plugin-ui-utils": "^2.0.0",
+    "homebridge-miot": "^1.8.7",
+    "node-fetch": "^2.6.7"
   }
 }

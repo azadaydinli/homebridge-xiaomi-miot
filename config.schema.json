@@ -59,7 +59,19 @@
                   "enum": ["cn","de","sg","tw","us","ru","in","i2"]
                 }
               }
-            }
+            },
+            "buzzerControl":    { "title": "Buzzer control",     "type": "boolean", "default": true },
+            "ledControl":       { "title": "LED control",        "type": "boolean", "default": true },
+            "childLockControl": { "title": "Child lock control", "type": "boolean", "default": true },
+            "modeControl":      { "title": "Mode control",       "type": "boolean", "default": true },
+            "fanLevelControl":  { "title": "Fan speed control",  "type": "boolean", "default": true },
+            "swingControl":     { "title": "Swing control",      "type": "boolean", "default": true },
+            "screenControl":    { "title": "Screen control",     "type": "boolean", "default": true },
+            "ioniserControl":   { "title": "Ioniser control",    "type": "boolean", "default": true },
+            "heaterControl":    { "title": "Heater control",     "type": "boolean", "default": true },
+            "heatLevelControl": { "title": "Heat level control", "type": "boolean", "default": true },
+            "offDelayControl":  { "title": "Off delay control",  "type": "boolean", "default": true },
+            "showTemperature":  { "title": "Show temperature",   "type": "boolean", "default": true }
           }
         }
       }
