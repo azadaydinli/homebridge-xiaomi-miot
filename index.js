@@ -11,7 +11,30 @@ const Events       = require(MIOT_ROOT + 'lib/constants/Events.js');
 
 const PLUGIN_NAME = 'homebridge-xiaomi-miot';
 const PLATFORM_NAME = 'XiaomiMiot';
-const PLUGIN_VERSION = '1.1.0';
+const PLUGIN_VERSION = '1.1.1';
+
+/* ── Silence homebridge-miot's verbose startup logs ── */
+const MIOT_INFO_SUPPRESS = [
+  'Initializing device services',   'Device services:',
+  'Initializing device properties', 'Device properties:',
+  'Initializing device actions',    'Device actions:',
+  'Initializing accessory!',        'Accessory successfully initialized!',
+  'Doing initial property fetch',   'Starting property polling',
+  'Filter used time:',              'Filter left time:',
+  'Filter life level:',             'Device identified',
+  'Model known:',                   'Device found!',
+  'Connected to device:',           'Using module class for device type',
+  'Device class for device type',
+];
+function quietLog(log) {
+  const mute = m => MIOT_INFO_SUPPRESS.some(p => String(m).includes(p));
+  return {
+    info:  (m, ...a) => { if (!mute(m)) log.info(m, ...a); },
+    warn:  (m, ...a) => log.warn(m, ...a),
+    error: (m, ...a) => log.error(m, ...a),
+    debug: (m, ...a) => log.debug(m, ...a),
+  };
+}
 
 let Homebridge;
 
@@ -40,14 +63,13 @@ class XiaomiMiotPlatform {
   }
 
   _initDevices() {
-    const devices = this.config.devices;
-    if (!Array.isArray(devices) || devices.length === 0) {
-      this.log.info('No devices configured.');
+    const devices = (this.config.devices || []).filter(Boolean);
+    if (devices.length === 0) {
+      this.log.warn('No devices configured.');
       return;
     }
-    for (const deviceConfig of devices) {
-      if (deviceConfig) this._initDevice(deviceConfig);
-    }
+    this.log.info(`Starting ${devices.length} device(s)…`);
+    for (const deviceConfig of devices) this._initDevice(deviceConfig);
     this._removeStaleCachedAccessories();
   }
 
@@ -79,7 +101,7 @@ class XiaomiMiotDeviceController {
     this.log = log;
     this.config = config;
     this.api = api;
-    this.logger = new Logger(log, config.name);
+    this.logger = new Logger(quietLog(log), config.name);
 
     if (!config.ip)    this.logger.error("'ip' is required but missing!");
     if (!config.token) this.logger.error("'token' is required but missing!");
@@ -114,7 +136,6 @@ class XiaomiMiotDeviceController {
 
     this.logger.setDeepDebugLogEnabled(this.deepDebugLog);
     this.logger.setSilentLogEnabled(this.silentLog);
-    this.logger.info(`Initialising device: ${this.name}`);
   }
 
   setCachedAccessory(accessory) {
@@ -146,7 +167,6 @@ class XiaomiMiotDeviceController {
 
   async _onIdentified(miotDevice) {
     if (this.device) return;
-    this.logger.info('Device identified — creating accessory...');
     this.device = await DeviceFactory.createDevice(
       miotDevice, this.specDir, this.name, this.isCustomAccessory, this.logger
     );
@@ -169,7 +189,6 @@ class XiaomiMiotDeviceController {
     this.device.initDeviceAccessory(this.uuid, this.config, this.api, this.cachedDeviceInfo);
 
     if (this.device.getAccessoryWrapper() && this.device.getAccessories().length > 0) {
-      this.logger.info(`Registering ${this.device.getAccessories().length} accessories`);
       this.api.registerPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, this.device.getAccessories());
 
       if (this.deviceEnabled) {
@@ -211,7 +230,7 @@ class XiaomiMiotDeviceController {
           });
         }
       });
-      this.logger.warn(`[OfflineDetect] ${this.name} — offline, error getHandlers installed.`);
+      this.logger.warn(`[OfflineDetect] ${this.name} — offline.`);
     };
 
     /* ── Restore original getHandlers when device comes back ── */
@@ -227,7 +246,6 @@ class XiaomiMiotDeviceController {
           delete char._xiaomiOrigGet;
         }
       });
-      this.logger.info(`[OfflineDetect] ${this.name} — back online, original handlers restored.`);
     };
 
     /* ── Track online state ── */
@@ -236,18 +254,12 @@ class XiaomiMiotDeviceController {
       lastUpdate = Date.now();
       online = true;
       clearTimeout(this._offlineStartupTimeout);
-      if (wasOffline) {
-        pushOnline();
-        this.logger.info(`[OfflineDetect] ${this.name} — online.`);
-      }
+      if (wasOffline) pushOnline();
     });
 
     /* Case 1: never connected within startup window */
     this._offlineStartupTimeout = setTimeout(() => {
-      if (!online) {
-        this.logger.warn(`[OfflineDetect] ${this.name} — no connection within startup window.`);
-        pushOffline();
-      }
+      if (!online) pushOffline();
     }, threshold);
 
     /* Case 2: was online but stopped updating */

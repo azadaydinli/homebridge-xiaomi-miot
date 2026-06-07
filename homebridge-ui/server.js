@@ -55,12 +55,9 @@ function makeLogger() {
 
 /* ── Server ── */
 
-flog('[xiaomi-miot] server.js loaded');
-
 class XiaomiMiotUiServer extends HomebridgePluginUiServer {
   constructor() {
     super();
-    flog('[xiaomi-miot] constructor called');
     this._pending     = null;
     this._discovering = false;
     this._pollResult  = null;

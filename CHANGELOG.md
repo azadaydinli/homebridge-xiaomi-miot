@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.2] - 2026-06-08
+
+### Changed
+- **Minimalist logging** — startup output reduced to a single `Starting N device(s)…` summary line. All verbose homebridge-miot internal messages (device properties, actions, services, accessory init, filter stats, model detection, connection details) are now suppressed. Only warnings, errors, and offline/online state changes remain visible.
+
+---
+
 ## [1.1.1] - 2026-06-08
 
 ### Added
