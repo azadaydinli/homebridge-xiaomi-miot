@@ -11,7 +11,7 @@ const Events       = require(MIOT_ROOT + 'lib/constants/Events.js');
 
 const PLUGIN_NAME = 'homebridge-xiaomi-miot';
 const PLATFORM_NAME = 'XiaomiMiot';
-const PLUGIN_VERSION = '1.1.1';
+const PLUGIN_VERSION = '1.1.3';
 
 /* ── Silence homebridge-miot's verbose startup logs ── */
 const MIOT_INFO_SUPPRESS = [
@@ -82,7 +82,9 @@ class XiaomiMiotPlatform {
       ctrl.setCachedAccessory(cached);
       this.cachedAccessories = this.cachedAccessories.filter(a => a !== cached);
     }
-    ctrl.setup();
+    ctrl.setup().catch(err => {
+      this.log.error(`[${deviceConfig.name || 'device'}] Setup error: ${err.message || err}`);
+    });
   }
 
   _removeStaleCachedAccessories() {
@@ -158,7 +160,9 @@ class XiaomiMiotDeviceController {
     this.miotDevice.setPollingInterval(this.pollingInterval);
     this.miotDevice.setMiCloudConfig(this.miCloudConfig);
 
-    this.miotDevice.on(Events.MIOT_DEVICE_IDENTIFIED,  (d) => this._onIdentified(d));
+    this.miotDevice.on(Events.MIOT_DEVICE_IDENTIFIED,  (d) => {
+      this._onIdentified(d).catch(err => this.logger.error(`Device init error: ${err.message || err}`));
+    });
     this.miotDevice.on(Events.MIOT_DEVICE_SPEC_FETCHED,(d) => this._saveMiotSpec(d));
     this.miotDevice.on(Events.MIOT_DEVICE_CONNECTED,   (d) => this._saveDeviceInfo(d));
 
@@ -167,15 +171,19 @@ class XiaomiMiotDeviceController {
 
   async _onIdentified(miotDevice) {
     if (this.device) return;
-    this.device = await DeviceFactory.createDevice(
-      miotDevice, this.specDir, this.name, this.isCustomAccessory, this.logger
-    );
-    if (!this.device) {
-      this.logger.warn('Device creation failed!');
-      return;
+    try {
+      this.device = await DeviceFactory.createDevice(
+        miotDevice, this.specDir, this.name, this.isCustomAccessory, this.logger
+      );
+      if (!this.device) {
+        this.logger.warn('Device creation failed!');
+        return;
+      }
+      await this.device.initDevice(this.propertyChunkSize);
+      this._registerAccessory();
+    } catch (err) {
+      this.logger.error(`Failed to initialize device: ${err.message || err}`);
     }
-    await this.device.initDevice(this.propertyChunkSize);
-    this._registerAccessory();
   }
 
   _registerAccessory() {

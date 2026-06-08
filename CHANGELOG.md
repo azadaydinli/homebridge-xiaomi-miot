@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.3] - 2026-06-08
+
+### Fixed
+- **Network resilience** — all async device-setup paths now have proper error handling. Unhandled promise rejections when network requests fail (e.g. miot-spec.org unreachable, fake/invalid device IP, token errors) no longer crash Homebridge. Errors are caught and logged at `error` level; other devices continue to operate normally.
+
+---
+
 ## [1.1.2] - 2026-06-08
 
 ### Changed
