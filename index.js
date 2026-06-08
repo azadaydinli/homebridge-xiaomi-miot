@@ -1,17 +1,18 @@
 'use strict';
 
 const fs = require('fs').promises;
-// Re-use homebridge-miot's battle-tested library (must be installed alongside)
-const MIOT_ROOT = require.resolve('homebridge-miot').replace(/index\.js$/, '');
-const MiotDevice   = require(MIOT_ROOT + 'lib/protocol/MiotDevice.js');
-const DeviceFactory = require(MIOT_ROOT + 'lib/factories/DeviceFactory.js');
-const Constants    = require(MIOT_ROOT + 'lib/constants/Constants.js');
-const Logger       = require(MIOT_ROOT + 'lib/utils/Logger.js');
-const Events       = require(MIOT_ROOT + 'lib/constants/Events.js');
+const path = require('path');
+// Vendored MiOT library (bundled — no external homebridge-miot dependency)
+const MIOT_ROOT = path.join(__dirname, 'vendor/miot/lib') + '/';
+const MiotDevice    = require(MIOT_ROOT + 'protocol/MiotDevice.js');
+const DeviceFactory = require(MIOT_ROOT + 'factories/DeviceFactory.js');
+const Constants     = require(MIOT_ROOT + 'constants/Constants.js');
+const Logger        = require(MIOT_ROOT + 'utils/Logger.js');
+const Events        = require(MIOT_ROOT + 'constants/Events.js');
 
 const PLUGIN_NAME = 'homebridge-xiaomi-miot';
 const PLATFORM_NAME = 'XiaomiMiot';
-const PLUGIN_VERSION = '1.1.3';
+const PLUGIN_VERSION = '1.2.0';
 
 /* ── Silence homebridge-miot's verbose startup logs ── */
 const MIOT_INFO_SUPPRESS = [

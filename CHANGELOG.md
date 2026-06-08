@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.2.0] - 2026-06-08
+
+### Changed
+- **Zero external plugin dependencies** — `homebridge-miot` dependency removed. The MiOT protocol library (343 files: protocol, device modules, factories, constants, utils, wrappers) is now bundled directly inside the plugin under `vendor/miot/`. The plugin is fully self-contained.
+- Sub-dependencies previously pulled in transitively via `homebridge-miot` (`color-convert`, `env-paths`, `randomstring`) are now declared explicitly as direct dependencies.
+
+---
+
 ## [1.1.3] - 2026-06-08
 
 ### Fixed
