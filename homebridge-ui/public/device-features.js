@@ -10,7 +10,7 @@
  *   screenControl, showTemperature,
  *   buzzerControl, ledControl, childLockControl, offDelayControl
  *
- * Mənbə: https://github.com/merdok/homebridge-miot — lib/modules/{kategoria}/devices/
+ * Mənbə: vendor/miot/lib/modules/{kategoria}/devices/
  */
 
 /* global DEVICE_FEATURES */

@@ -1,10 +1,17 @@
 # Changelog
 
+## [1.2.1] - 2026-06-08
+
+### Changed
+- Removed all references to the previously used third-party MiOT library from comments and documentation. The plugin is now fully independent with no external plugin dependencies.
+
+---
+
 ## [1.2.0] - 2026-06-08
 
 ### Changed
-- **Zero external plugin dependencies** — `homebridge-miot` dependency removed. The MiOT protocol library (343 files: protocol, device modules, factories, constants, utils, wrappers) is now bundled directly inside the plugin under `vendor/miot/`. The plugin is fully self-contained.
-- Sub-dependencies previously pulled in transitively via `homebridge-miot` (`color-convert`, `env-paths`, `randomstring`) are now declared explicitly as direct dependencies.
+- **Zero external plugin dependencies** — MiOT protocol library (343 files: protocol, device modules, factories, constants, utils, wrappers) is now bundled directly inside the plugin under `vendor/miot/`. The plugin is fully self-contained.
+- Sub-dependencies (`color-convert`, `env-paths`, `randomstring`) are now declared explicitly as direct dependencies.
 
 ---
 
@@ -18,7 +25,7 @@
 ## [1.1.2] - 2026-06-08
 
 ### Changed
-- **Minimalist logging** — startup output reduced to a single `Starting N device(s)…` summary line. All verbose homebridge-miot internal messages (device properties, actions, services, accessory init, filter stats, model detection, connection details) are now suppressed. Only warnings, errors, and offline/online state changes remain visible.
+- **Minimalist logging** — startup output reduced to a single `Starting N device(s)…` summary line. All verbose MiOT internal messages (device properties, actions, services, accessory init, filter stats, model detection, connection details) are now suppressed. Only warnings, errors, and offline/online state changes remain visible.
 
 ---
 
@@ -27,8 +34,8 @@
 ### Added
 - **Offline detection** — devices that lose network connectivity now show "No Response" in HomeKit. Detection works by overriding HAP `getHandler`s to throw `SERVICE_COMMUNICATION_FAILURE` after 4 missed polling cycles. Original handlers are restored automatically when the device reconnects.
 - **Auto/sleep mode rotation speed** — when a device is in Auto or Sleep mode, the `RotationSpeed` characteristic shows a configurable placeholder value (default `50%`) instead of `0%`. Configurable via `"autoRotationSpeed"` in device config (set to `0` to disable).
-- **Per-model feature toggles (Config UI)** — the device settings UI now lists device-specific feature toggles (buzzer, LED, child lock, modes, fan speed, swing, screen, ioniser, etc.) sourced from the homebridge-miot device registry. Features default to **OFF**; the user enables only what they need. Covers 83+ device models across 7 categories (fans, air purifiers, humidifiers, lights, heaters, vacuums, outlets).
-- **`normalizeFeatures()`** — on every UI render, any feature key that is `undefined` in config is explicitly written as `false` before saving, preventing homebridge-miot's built-in defaults from silently enabling disabled features.
+- **Per-model feature toggles (Config UI)** — the device settings UI now lists device-specific feature toggles (buzzer, LED, child lock, modes, fan speed, swing, screen, ioniser, etc.) sourced from the bundled device registry. Features default to **OFF**; the user enables only what they need. Covers 83+ device models across 7 categories (fans, air purifiers, humidifiers, lights, heaters, vacuums, outlets).
+- **`normalizeFeatures()`** — on every UI render, any feature key that is `undefined` in config is explicitly written as `false` before saving, preventing built-in defaults from silently enabling disabled features.
 - **`device-features.js`** — feature definitions moved to a separate file for easy maintenance; adding a new model requires editing only that file.
 - **`autoRotationSpeed` config key** in `config.schema.json`.
 
@@ -56,6 +63,6 @@
 
 ### Added
 - Initial release.
-- Wraps `homebridge-miot` as a child-bridge platform plugin.
+- Homebridge platform plugin for Xiaomi MiOT devices.
 - Config UI with per-device settings (name, IP, token, model, polling interval, connection type).
 - Cloud (MiCloud) and local connection modes.

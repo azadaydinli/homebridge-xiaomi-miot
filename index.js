@@ -2,7 +2,7 @@
 
 const fs = require('fs').promises;
 const path = require('path');
-// Vendored MiOT library (bundled — no external homebridge-miot dependency)
+// Bundled MiOT library
 const MIOT_ROOT = path.join(__dirname, 'vendor/miot/lib') + '/';
 const MiotDevice    = require(MIOT_ROOT + 'protocol/MiotDevice.js');
 const DeviceFactory = require(MIOT_ROOT + 'factories/DeviceFactory.js');
@@ -12,9 +12,9 @@ const Events        = require(MIOT_ROOT + 'constants/Events.js');
 
 const PLUGIN_NAME = 'homebridge-xiaomi-miot';
 const PLATFORM_NAME = 'XiaomiMiot';
-const PLUGIN_VERSION = '1.2.0';
+const PLUGIN_VERSION = '1.2.1';
 
-/* ── Silence homebridge-miot's verbose startup logs ── */
+/* ── Silence verbose MiOT startup logs ── */
 const MIOT_INFO_SUPPRESS = [
   'Initializing device services',   'Device services:',
   'Initializing device properties', 'Device properties:',
@@ -312,7 +312,7 @@ class XiaomiMiotDeviceController {
       return val;
     });
 
-    /* 2) Fix push updates — homebridge-miot calls updateValue(0) after each poll.
+    /* 2) Fix push updates — the MiOT layer calls updateValue(0) after each poll.
           Our listener runs after it (registered later) and corrects the value. */
     this.miotDevice.on(Events.MIOT_DEVICE_ALL_PROPERTIES_UPDATED, () => {
       if (rsChar && this._isInAutoOrSleepMode(dev)) {

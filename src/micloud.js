@@ -208,7 +208,7 @@ class MiCloud {
     this.log.info(`[MiCloud] Login successful — ssecurity=${!!this.ssecurity} serviceToken=${!!this.serviceToken}`);
   }
 
-  /* ── Get device list — RC4 encrypted (matches homebridge-miot default) ── */
+  /* ── Get device list — RC4 encrypted ── */
   async getDevices() {
     if (!this.serviceToken) await this.login();
 
@@ -247,12 +247,12 @@ class MiCloud {
       let parsed = null;
 
       if (this.ssecurity) {
-        // ── RC4 encrypted path (homebridge-miot default) ──────────────────
+        // ── RC4 encrypted path ──────────────────────────────────────────────
         const params = { data: JSON.stringify(dataObj) };
         const nonce  = genNonce();
         const sNonce = signedNonce(this.ssecurity, nonce);
 
-        // Build RC4 body identical to homebridge-miot _generateRc4Body
+        // Build RC4 body
         params['rc4_hash__'] = sha1Sign('POST', apiUrl, params, sNonce);
         const encParams = {};
         for (const [k, v] of Object.entries(params)) {

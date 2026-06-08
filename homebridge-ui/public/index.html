@@ -230,7 +230,7 @@
   }
 
   /* ── Render ── */
-  /* Hər cihazın feature key-lərini açıqca false ilə başlat (undefined → homebridge-miot true sayır) */
+  /* Hər cihazın feature key-lərini açıqca false ilə başlat (undefined → default olaraq true sayılır) */
   function normalizeFeatures() {
     let changed = false;
     (config.devices || []).forEach(d => {
